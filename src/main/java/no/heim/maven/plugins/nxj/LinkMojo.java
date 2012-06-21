@@ -1,7 +1,9 @@
 package no.heim.maven.plugins.nxj;
 
-import js.tinyvm.TinyVM;
+import java.io.IOException;
+
 import js.tinyvm.TinyVMException;
+import lejos.pc.tools.NXJLink;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -13,9 +15,9 @@ import org.apache.maven.plugin.MojoFailureException;
  * @requiresProject true
  * @execute phase="compile"
  */
-public class LinkMojo extends AbstractMojo
-{
-    /**
+public class LinkMojo extends AbstractMojo {
+
+	/**
      * Any Object to print out.
      * @parameter expression="${echo.message}" default-value="Hello World..."
      */
@@ -38,33 +40,21 @@ public class LinkMojo extends AbstractMojo
      * @parameter expression="${applicationName}
      */
     private Object applicationName;
-    
-    
-    /**
-     * Filter unused classes?
-     * @parameter expression="${filterUnused}" default-value=true;
-     */
-    private Object filterUnusedClasses;
 
-    public void execute()
-        throws MojoExecutionException, MojoFailureException
-    {
-    	
-    	TinyVM tinyVM = new TinyVM();
-    	
-    	String classPath = TinyVM.joinCP(bootClassPath.toString(), "target/classes"); 
-    	
-    	boolean all = !Boolean.parseBoolean(filterUnusedClasses.toString());
-    	String classes[] = { mainClass.toString() };
+    public void execute() throws MojoExecutionException, MojoFailureException {
     	try {
-			tinyVM.start(classPath, classes, all, "target/" + applicationName.toString(), 
-					false, false, 0, true);
+			new NXJLink().run(
+					new String[] { "-bp", bootClassPath.toString(),
+								   "-cp", "target/classes", "-wo", "BE", "-o", "target/" + applicationName.toString(),
+								   mainClass.toString() });
 		} catch (TinyVMException e) {
 			getLog().error("Could not perform linking", e);
 			throw new MojoFailureException(e, "Error", "");
+		} catch (IOException e) {
+			getLog().error("Could not perform linking", e);
+			throw new MojoFailureException(e, "Error", "");
 		}
-    	
-        getLog().info( message.toString() );
-    }
 
+        getLog().info(message.toString());
+    }
 }
