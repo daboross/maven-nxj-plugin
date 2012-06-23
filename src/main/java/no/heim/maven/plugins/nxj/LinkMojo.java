@@ -45,7 +45,7 @@ public class LinkMojo extends AbstractMojo {
     	try {
 			new NXJLink().run(
 					new String[] { "-bp", bootClassPath.toString(),
-								   "-cp", "target/classes", "-wo", "BE", "-o", "target/" + applicationName.toString(),
+								   "-cp", "target/classes", "-wo", "LE", "-o", "target/" + applicationName.toString(),
 								   mainClass.toString() });
 		} catch (TinyVMException e) {
 			getLog().error("Could not perform linking", e);
