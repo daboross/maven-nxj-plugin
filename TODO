@@ -1,6 +1,3 @@
-- fix tabs / spaces in code
-- set java version to 1.6
-- clean up pom file
 - add license tags
 - resolve classpath to lejos jars by dependency declarations
 - add mojo for upload and a combined mojo for linkin and uploading in one step

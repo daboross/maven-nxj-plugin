@@ -48,17 +48,22 @@ public class LinkMojo extends AbstractMojo {
      */
     private Object applicationName;
 
+    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
         final String localRepository = System.getProperty("user.home")
                 + File.separator + ".m2" + File.separator + "repository";
+
         final ClasspathBuilder cpBuilder = new ClasspathBuilder(localRepository, project.getDependencies());
+
         try {
+
             new NXJLink().run(new String[] {
                     "-bp", bootClassPath.toString(),
                     "-cp", "target" + File.separator + "classes" + File.pathSeparator + cpBuilder.build(),
                     "-wo", "LE",
                     "-o", "target" + File.separator + applicationName.toString(),
                     mainClass.toString() });
+
         } catch (TinyVMException e) {
             getLog().error("Could not perform linking", e);
             throw new MojoFailureException(e, "Error", "");
