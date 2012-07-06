@@ -1,5 +1,6 @@
 package no.heim.maven.plugins.nxj;
 
+import java.io.File;
 import java.io.IOException;
 
 import js.tinyvm.TinyVMException;
@@ -8,6 +9,7 @@ import lejos.pc.tools.NXJLink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Echos an object string to the output screen.
@@ -18,11 +20,12 @@ import org.apache.maven.plugin.MojoFailureException;
 public class LinkMojo extends AbstractMojo {
 
 	/**
-     * Any Object to print out.
-     * @parameter expression="${echo.message}" default-value="Hello World..."
+     * @parameter expression="${project}"
+     * @required
+     * @readonly
      */
-    private Object message;
-    
+    private MavenProject project;
+
     /**
      * Location of lejos-classes.
      * @parameter expression="${bootClassPath}"
@@ -42,10 +45,14 @@ public class LinkMojo extends AbstractMojo {
     private Object applicationName;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+    	final ClasspathBuilder cpBuilder = new ClasspathBuilder(
+    			System.getProperty("user.home") + File.separator + ".m2" + File.separator + "repository",
+    			project.getDependencies());
     	try {
 			new NXJLink().run(
 					new String[] { "-bp", bootClassPath.toString(),
-								   "-cp", "target/classes", "-wo", "LE", "-o", "target/" + applicationName.toString(),
+								   "-cp", "target" + File.separator +"classes" + File.pathSeparator + cpBuilder.build(),
+								   "-wo", "LE", "-o", "target" + File.separator + applicationName.toString(),
 								   mainClass.toString() });
 		} catch (TinyVMException e) {
 			getLog().error("Could not perform linking", e);
@@ -54,7 +61,5 @@ public class LinkMojo extends AbstractMojo {
 			getLog().error("Could not perform linking", e);
 			throw new MojoFailureException(e, "Error", "");
 		}
-
-        getLog().info(message.toString());
     }
 }
