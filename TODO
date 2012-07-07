@@ -1,1 +1,1 @@
-- resolve classpath to lejos jars by dependency declarations
+- link mojo: resolve bootclasspath to lejos jars by dependency declarations
