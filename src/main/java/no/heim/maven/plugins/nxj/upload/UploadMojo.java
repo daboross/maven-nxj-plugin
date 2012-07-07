@@ -82,6 +82,8 @@ public class UploadMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
 
+            getLog().info("Start uploading to nxt...");
+
             final boolean isUsb = protocol.equalsIgnoreCase("usb");
             new Upload().upload(nxtName,
                     nxtAddress,
@@ -89,6 +91,8 @@ public class UploadMojo extends AbstractMojo {
                     new File(executable),
                     nxtFilename,
                     shouldImmediatelyRun);
+
+            getLog().info("Uploaded successfully");
 
         } catch (NXTNotFoundException e) {
             getLog().error("Could not perform upload", e);
