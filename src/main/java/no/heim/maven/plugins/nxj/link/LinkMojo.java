@@ -62,7 +62,6 @@ public class LinkMojo extends AbstractMojo {
      * Name of output application
      *
      * @parameter
-     * @required
      */
     private String applicationName;
 
@@ -70,6 +69,15 @@ public class LinkMojo extends AbstractMojo {
         getLog().info("Start linking...");
         final String classpath = createClasspath();
         getLog().debug("Link with classpath: " + classpath);
+
+        if (applicationName == null) {
+            final int endOfLastPackage = mainClass.lastIndexOf(".");
+            if (endOfLastPackage != -1) {
+                applicationName = mainClass.substring(endOfLastPackage + 1);
+            } else {
+                applicationName = mainClass;
+            }
+        }
 
         try {
             final int linkResult = new NXJLink().run(new String[] {
