@@ -76,7 +76,7 @@ public class LinkMojo extends AbstractMojo {
                     "-bp", bootClassPath.toString(),
                     "-cp", "target" + File.separator + "classes" + File.pathSeparator + cpBuilder.build(),
                     "-wo", "LE",
-                    "-o", "target" + File.separator + applicationName.toString(),
+                    "-o", "target" + File.separator + applicationName.toString() + ".nxj",
                     mainClass.toString() });
 
         } catch (TinyVMException e) {
