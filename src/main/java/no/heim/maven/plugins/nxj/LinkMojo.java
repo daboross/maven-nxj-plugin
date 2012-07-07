@@ -30,13 +30,12 @@ import org.apache.maven.project.MavenProject;
  * Links all compiled classes to an executable for the NXJ platform.
  * 
  * @goal link
- * @requiresProject true
- * @execute phase="compile"
  */
 public class LinkMojo extends AbstractMojo {
 
     /**
      * @parameter expression="${project}"
+     * @parameter
      * @required
      * @readonly
      */
@@ -44,22 +43,25 @@ public class LinkMojo extends AbstractMojo {
 
     /**
      * Location of lejos-classes.
-     * 
-     * @parameter expression="${bootClassPath}"
+     *
+     * @parameter
+     * @required
      */
     private String bootClassPath;
 
     /**
      * Name of main class
-     * 
-     * @parameter expression="${mainClass}"
+     *
+     * @parameter
+     * @required
      */
     private String mainClass;
 
     /**
      * Name of output application
-     * 
-     * @parameter expression="${applicationName}
+     *
+     * @parameter
+     * @required
      */
     private String applicationName;
 

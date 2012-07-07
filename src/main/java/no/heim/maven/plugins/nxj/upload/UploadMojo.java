@@ -37,42 +37,45 @@ public class UploadMojo extends AbstractMojo {
     /**
      * Name of the NXT
      * 
-     * @parameter expression="${nxtName}
+     * @parameter
+     * @required
      */
     private String nxtName;
 
     /**
      * Mac address of the NXT
      * 
-     * @parameter expression="${nxtAddress}
+     * @parameter
+     * @required
      */
-    private String address;
+    private String nxtAddress;
 
     /**
      * The protocol to use for transmission (either "usb" or "bluetooth")
      * 
-     * @parameter expression="${protocol}
+     * @parameter default-value="usb"
      */
     private String protocol;
 
     /**
      * The nxj executable file
      *
-     * @parameter expression="${executable}
+     * @parameter
+     * @required
      */
     private String executable;
 
     /**
      * The filename of the nxj executable file at the robot
      *
-     * @parameter expression="${nxtFilename}
+     * @parameter
      */
     private String nxtFilename;
 
     /**
      * If true the uploaded executable starts immediately
      *
-     * @parameter expression="${runImmediately}
+     * @parameter expression=${runImmediately} default-value=true
      */
     private boolean shouldImmediatelyRun;
 
@@ -81,7 +84,7 @@ public class UploadMojo extends AbstractMojo {
 
             final boolean isUsb = protocol.equalsIgnoreCase("usb");
             new Upload().upload(nxtName,
-                    address,
+                    nxtAddress,
                     (isUsb ? NXTCommFactory.USB : NXTCommFactory.BLUETOOTH),
                     new File(executable),
                     nxtFilename,
