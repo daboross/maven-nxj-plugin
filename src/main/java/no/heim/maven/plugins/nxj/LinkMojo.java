@@ -47,7 +47,7 @@ public class LinkMojo extends AbstractMojo {
      * @parameter
      * @required
      */
-    private String bootClassPath;
+    private String bootClasspath;
 
     /**
      * Name of main class
@@ -65,21 +65,24 @@ public class LinkMojo extends AbstractMojo {
      */
     private String applicationName;
 
-    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final String localRepository = System.getProperty("user.home")
-                + File.separator + ".m2" + File.separator + "repository";
-
-        final ClasspathBuilder cpBuilder = new ClasspathBuilder(localRepository, project.getDependencies());
+        getLog().info("Start linking...");
+        final String classpath = createClasspath();
+        getLog().debug("Link with classpath: " + classpath);
 
         try {
-
-            new NXJLink().run(new String[] {
-                    "-bp", bootClassPath,
-                    "-cp", "target" + File.separator + "classes" + File.pathSeparator + cpBuilder.build(),
+            final int linkResult = new NXJLink().run(new String[] {
+                    "-bp", bootClasspath,
+                    "-cp", classpath,
                     "-wo", "LE",
                     "-o", "target" + File.separator + applicationName + ".nxj",
                     mainClass });
+
+            if (linkResult == 0) {
+                getLog().info("Linked successfully " + applicationName);
+            } else {
+                getLog().error("Error occurred in nxj linker");
+            }
 
         } catch (TinyVMException e) {
             getLog().error("Could not perform linking", e);
@@ -88,5 +91,14 @@ public class LinkMojo extends AbstractMojo {
             getLog().error("Could not perform linking", e);
             throw new MojoFailureException(e, "Error", "");
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private String createClasspath() {
+        final String localRepository = System.getProperty("user.home")
+                + File.separator + ".m2" + File.separator + "repository";
+        final ClasspathBuilder cpBuilder = new ClasspathBuilder(localRepository, project.getDependencies());
+        final String classpath = "target" + File.separator + "classes" + File.pathSeparator + cpBuilder.build();
+        return classpath;
     }
 }
