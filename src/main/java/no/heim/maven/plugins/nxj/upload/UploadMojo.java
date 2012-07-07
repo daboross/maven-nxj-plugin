@@ -38,7 +38,6 @@ public class UploadMojo extends AbstractMojo {
      * Name of the NXT
      * 
      * @parameter
-     * @required
      */
     private String nxtName;
 
@@ -46,7 +45,6 @@ public class UploadMojo extends AbstractMojo {
      * Mac address of the NXT
      * 
      * @parameter
-     * @required
      */
     private String nxtAddress;
 
@@ -69,6 +67,7 @@ public class UploadMojo extends AbstractMojo {
      * The filename of the nxj executable file at the robot
      *
      * @parameter
+     * @required
      */
     private String nxtFilename;
 
