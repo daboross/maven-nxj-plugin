@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.heim.maven.plugins.nxj;
+package no.heim.maven.plugins.nxj.link;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +30,7 @@ import org.apache.maven.project.MavenProject;
  * Links all compiled classes to an executable for the NXJ platform.
  * 
  * @goal link
+ * @author Felix Müller
  */
 public class LinkMojo extends AbstractMojo {
 

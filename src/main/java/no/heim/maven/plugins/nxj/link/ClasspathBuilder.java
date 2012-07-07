@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.heim.maven.plugins.nxj;
+package no.heim.maven.plugins.nxj.link;
 
 import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.model.Dependency;
 
+/**
+ * This is a helper class for building a classpath of
+ * all compile scope dependencies of a given dependencies list.
+ *
+ * @author Felix Müller
+ */
 public class ClasspathBuilder {
 
     private final String rootPath;

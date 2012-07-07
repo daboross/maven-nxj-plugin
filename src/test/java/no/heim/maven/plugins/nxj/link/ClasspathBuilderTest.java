@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.heim.maven.plugins.nxj;
+package no.heim.maven.plugins.nxj.link;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
