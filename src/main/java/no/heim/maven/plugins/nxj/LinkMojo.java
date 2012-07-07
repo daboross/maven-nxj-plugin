@@ -47,21 +47,21 @@ public class LinkMojo extends AbstractMojo {
      * 
      * @parameter expression="${bootClassPath}"
      */
-    private Object bootClassPath;
+    private String bootClassPath;
 
     /**
      * Name of main class
      * 
      * @parameter expression="${mainClass}"
      */
-    private Object mainClass;
+    private String mainClass;
 
     /**
      * Name of output application
      * 
      * @parameter expression="${applicationName}
      */
-    private Object applicationName;
+    private String applicationName;
 
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -73,11 +73,11 @@ public class LinkMojo extends AbstractMojo {
         try {
 
             new NXJLink().run(new String[] {
-                    "-bp", bootClassPath.toString(),
+                    "-bp", bootClassPath,
                     "-cp", "target" + File.separator + "classes" + File.pathSeparator + cpBuilder.build(),
                     "-wo", "LE",
-                    "-o", "target" + File.separator + applicationName.toString() + ".nxj",
-                    mainClass.toString() });
+                    "-o", "target" + File.separator + applicationName + ".nxj",
+                    mainClass });
 
         } catch (TinyVMException e) {
             getLog().error("Could not perform linking", e);
