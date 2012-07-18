@@ -15,12 +15,11 @@
  */
 package no.heim.maven.plugins.nxj.upload;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
-
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.tools.NXTNotFoundException;
-import lejos.pc.tools.Upload;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,25 +34,12 @@ import org.apache.maven.plugin.MojoFailureException;
 public class UploadMojo extends AbstractMojo {
 
     /**
-     * Name of the NXT
-     * 
+     * Path of nxjupload script
+     *
      * @parameter
+     * @required
      */
-    private String nxtName;
-
-    /**
-     * Mac address of the NXT
-     * 
-     * @parameter
-     */
-    private String nxtAddress;
-
-    /**
-     * The protocol to use for transmission (either "usb" or "bluetooth")
-     * 
-     * @parameter default-value="usb"
-     */
-    private String protocol;
+    private String nxjupload;
 
     /**
      * The nxj executable file
@@ -64,41 +50,59 @@ public class UploadMojo extends AbstractMojo {
     private String executable;
 
     /**
-     * The filename of the nxj executable file at the robot
-     *
-     * @parameter
-     * @required
-     */
-    private String nxtFilename;
-
-    /**
      * If true the uploaded executable starts immediately
      *
-     * @parameter expression=${runImmediately} default-value=true
+     * @parameter default-value=false
      */
-    private boolean shouldImmediatelyRun;
+    private boolean runImmediately;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
+        getLog().info("Start uploading to nxt...");
+
         try {
+            // best solution because the nxjupload script also handles jre 32 bit switch
+            final Process uploadProcess = new ProcessBuilder(createUploadCommandLine()).start();
+            pipeOutputToMavenLog(uploadProcess);
 
-            getLog().info("Start uploading to nxt...");
+            final int uploadResult = uploadProcess.waitFor();
+            if (uploadResult == 0) {
+                getLog().info("Uploaded successfully");
+            } else {
+                getLog().error("Error at uploading!");
+                throw new MojoFailureException("Could not upload file to NXT robot!");
+            }
+        } catch (IOException ioe) {
+            getLog().error("I/O Error", ioe);
+            throw new MojoExecutionException(
+                    "Could not upload file because an I/O error occurred", ioe);
+        } catch (InterruptedException ie) {
+            getLog().error("Unexpected interruption of spawned process", ie);
+            throw new MojoExecutionException(
+                    "Could not upload file because spawned process threw an exception", ie);
+        }
+    }
 
-            final boolean isUsb = protocol.equalsIgnoreCase("usb");
-            new Upload().upload(nxtName,
-                    nxtAddress,
-                    (isUsb ? NXTCommFactory.USB : NXTCommFactory.BLUETOOTH),
-                    new File(executable),
-                    nxtFilename,
-                    shouldImmediatelyRun);
+    @SuppressWarnings("serial")
+    private List<String> createUploadCommandLine() {
+        return new LinkedList<String>() {{
+            add(nxjupload);
+            add("-u");
+            if (runImmediately) {
+                add("-r");
+            }
+            add(executable);
+        }};
+    }
 
-            getLog().info("Uploaded successfully");
-
-        } catch (NXTNotFoundException e) {
-            getLog().error("Could not perform upload", e);
-            throw new MojoFailureException(e, "NXT not found", "The given NXT was not found");
+    private void pipeOutputToMavenLog(Process process) {
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                getLog().info(line);
+            }
         } catch (IOException e) {
-            getLog().error("Could not perform upload", e);
-            throw new MojoFailureException(e, "IO error at upload", "IO error at upload to the NXT robot");
+            getLog().warn("Error at piping output of nxjupload tool to maven log", e);
         }
     }
 }
