@@ -91,14 +91,15 @@ public class LinkMojo extends AbstractMojo {
                 getLog().info("Linked successfully " + applicationName);
             } else {
                 getLog().error("Error occurred in nxj linker");
+                throw new MojoFailureException("Could not link an executable!");
             }
 
         } catch (TinyVMException e) {
             getLog().error("Could not perform linking", e);
-            throw new MojoFailureException(e, "Linker error", "The TinyVM thrown a linker error.");
+            throw new MojoExecutionException(e, "Linker error", "The TinyVM thrown a linker error.");
         } catch (IOException e) {
             getLog().error("Could not perform linking", e);
-            throw new MojoFailureException(e, "IO error at linking", "IO error occurred at linking nxj executable.");
+            throw new MojoExecutionException(e, "IO error at linking", "IO error occurred at linking nxj executable.");
         }
     }
 
