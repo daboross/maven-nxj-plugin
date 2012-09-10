@@ -45,7 +45,7 @@
     </dependency>
     <dependency>
       <groupId>org.lejos</groupId>
-      <artifactId>pccomms</artifactId>
+      <artifactId>pccomm</artifactId>
       <version>${lejos.version}</version>
     </dependency>
     <dependency>
