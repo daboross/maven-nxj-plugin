@@ -1,0 +1,29 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.daboross.lejos.lib</groupId>
+    <artifactId>classes</artifactId>
+    <version>0.9.1-BETA3</version>
+
+    <name>leJOS classes</name>
+    <description>Dummy project</description>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.4</version>
+            </extension>
+        </extensions>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>repo-daboross-net</id>
+            <name>repo.daboross.net</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>scp://repo.daboross.net/repo/</url>
+        </repository>
+    </distributionManagement>
+</project>

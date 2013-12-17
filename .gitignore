@@ -1,32 +1,65 @@
+# Compiled source #
+###################
+bin
+out
+target
+*.com
 *.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Git #
+#######
+.git
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
 *.log
+*.sql
+*.sqlite
 
-dist/*
-target/
-lib_managed/
-src_managed/
-project/boot/
-project/plugins/project/
+# OS generated files #
+######################
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
 
-.scala_dependencies
+# Build files #
+#################
+MANIFEST.MF
+dependency-reduced-pom.xml
 
-.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
+# Project files #
+#####################
 .classpath
-.settings/
-.loadpath
-.externalToolBuilders/
+.externalToolBuilders
+.idea
+.project
+.settings
+build
+dist
+nbproject
+atlassian-ide-plugin.xml
+build.xml
+nb-configuration.xml
+*.iml
+*.ipr
+*.iws
 
-*.launch
-*.cache
-
-.idea/
-.idea_modules/
+# Misc files #
+##############
+*.bak
